@@ -1,14 +1,17 @@
 import boto3
 import io
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class AwsClient:
     def __init__(self):
         self.s3 = boto3.client(
             "s3",
-            aws_access_key_id="6cba959a9b2a405db52de505c1de1033",
-            aws_secret_access_key="0acf210f6332441484549127b48ffc68",
-            endpoint_url="https://s3.bhs.io.cloud.ovh.net/",
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
+            endpoint_url=os.getenv("ENDPOINT"),
         )
 
     def upload_file(self, data: bytes, bucket: str, prefix: str):
