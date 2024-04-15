@@ -17,7 +17,14 @@ class AwsPandas:
             df = pd.concat([df, pd.read_parquet(io.BytesIO(data))])
         return df
     
-    def save_dataframe(self, bucket: str, prefix: str, df: pd.DataFrame, chunks: int) -> None:
+    
+    def save_dataframe(self, bucket: str, prefix: str, filename:str, df: pd.DataFrame) -> None:
+            pq_bin = df.to_parquet(index=False, engine='pyarrow', compression="snappy")
+            path = os.path.join(prefix, f"{filename}.snappy.parquet")
+            self.aws_client.upload_file(pq_bin, bucket, path)
+            part_num += 1
+
+    def save_dataframe_in_chunks(self, bucket: str, prefix: str, df: pd.DataFrame, chunks: int) -> None:
         part_num = 0
         for i in range(0, len(df), chunks):
             start = i 

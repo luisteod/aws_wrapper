@@ -2,3 +2,4 @@ boto3
 pandas
 ipykernel
 python-dotenv
+pyarrow
