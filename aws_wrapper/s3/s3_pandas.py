@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from tqdm import tqdm
 
-class AwsPandas:
+class S3Pandas:
     """
     Class to handle pandas dataframes in S3.
     """
@@ -14,8 +14,9 @@ class AwsPandas:
         df = pd.DataFrame()
         files = self.aws_client.list_files(bucket, prefix)
         for file in tqdm(files, desc="Reading files",leave=False):
-            data = self.aws_client.download_file(bucket, file)
-            df = pd.concat([df, pd.read_parquet(io.BytesIO(data))])
+            if file.endswith(".parquet"):
+                data = self.aws_client.download_file(bucket, file)
+                df = pd.concat([df, pd.read_parquet(io.BytesIO(data))])
         return df
     
     

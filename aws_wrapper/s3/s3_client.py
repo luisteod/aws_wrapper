@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class AwsClient:
+class S3Client:
     def __init__(self):
         self.s3 = boto3.client(
             "s3",
@@ -51,7 +51,10 @@ class AwsClient:
     
     def list_files(self, bucket, prefix) -> list:
         response = self.s3.list_objects_v2(Bucket=bucket, Prefix=prefix)
-        res = [contents['Key'] for contents in response['Contents']]
+        try:
+            res = [contents['Key'] for contents in response['Contents']]
+        except KeyError as e:
+            raise KeyError(f"No files found in {bucket}/{prefix}")
         return res
     
     def list_folders(self,bucket_name, prefix) -> list:
@@ -117,5 +120,5 @@ class AwsClient:
 
 
 if __name__ == "__main__":
-    aws = AwsClient()
-    res = aws.list_folders("drivalake", "food/bronze/rappi")
+    s3 = S3Client()
+    res = s3.list_folders("drivalake", "food/bronze/rappi")
