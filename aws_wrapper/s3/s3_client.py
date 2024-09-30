@@ -6,12 +6,12 @@ load_dotenv()
 
 
 class S3Client:
-    def __init__(self):
+    def __init__(self, endpoint, access_key, secret_key):
         self.s3 = boto3.client(
             "s3",
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_KEY"),
-            endpoint_url=os.getenv("ENDPOINT"),
+            aws_access_key_id=access_key,
+            aws_secret_access_key=secret_key,
+            endpoint_url=endpoint,
         )
 
     def upload_file(self, data: bytes, bucket: str, prefix: str):
